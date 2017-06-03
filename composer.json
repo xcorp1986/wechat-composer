@@ -1,7 +1,7 @@
 {
-    "name": "xutl/weichat-composer",
+    "name": "xutl/wechat-composer",
     "description": "The composer plugin for Wechat extension installer",
-    "keywords": ["weixin", "composer", "extension installer"],
+    "keywords": ["weixin", "composer","wechat", "extension installer"],
     "type": "composer-plugin",
     "license": "BSD-3-Clause",
     "support": {
