@@ -168,6 +168,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     private function findUpgradeNotes($packageName, $fromVersion)
     {
+        return [];
         $upgradeFile = $this->_vendorDir . '/' . $packageName . '/README.md';
         if (!is_file($upgradeFile) || !is_readable($upgradeFile)) {
             return false;
