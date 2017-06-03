@@ -15,6 +15,8 @@ use Composer\DependencyResolver\Operation\UpdateOperation;
 /**
  * Class Plugin
  * @package xutl\composer
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
  */
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -169,25 +171,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private function findUpgradeNotes($packageName, $fromVersion)
     {
         return [];
-        $upgradeFile = $this->_vendorDir . '/' . $packageName . '/README.md';
-        if (!is_file($upgradeFile) || !is_readable($upgradeFile)) {
-            return false;
-        }
-        $lines = preg_split('~\R~', file_get_contents($upgradeFile));
-        $relevantLines = [];
-        $consuming = false;
-        foreach($lines as $line) {
-            if (preg_match('/^Upgrade from overtrue/wechat ([0-9]\.[0-9]+\.?[0-9]*)/i', $line, $matches)) {
-                if (version_compare($matches[1], $fromVersion, '<')) {
-                    break;
-                }
-                $consuming = true;
-            }
-            if ($consuming) {
-                $relevantLines[] = $line;
-            }
-        }
-        return $relevantLines;
     }
 
     /**

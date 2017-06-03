@@ -12,6 +12,8 @@ use Composer\Repository\InstalledRepositoryInterface;
 /**
  * Class Installer
  * @package xutl\composer
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
  */
 class Installer extends LibraryInstaller
 {
