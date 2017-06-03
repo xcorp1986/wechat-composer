@@ -66,10 +66,6 @@ class Installer extends LibraryInstaller
             'version' => $package->getVersion(),
         ];
 
-        $alias = $this->generateDefaultAlias($package);
-        if (!empty($alias)) {
-            $extension['alias'] = $alias;
-        }
         $extra = $package->getExtra();
         if (isset($extra[self::EXTRA_BOOTSTRAP])) {
             $extension['bootstrap'] = $extra[self::EXTRA_BOOTSTRAP];
@@ -78,52 +74,6 @@ class Installer extends LibraryInstaller
         $extensions = $this->loadExtensions();
         $extensions[$package->getName()] = $extension;
         $this->saveExtensions($extensions);
-    }
-
-    protected function generateDefaultAlias(PackageInterface $package)
-    {
-        $fs = new Filesystem;
-        $vendorDir = $fs->normalizePath($this->vendorDir);
-        $autoload = $package->getAutoload();
-
-        $aliases = [];
-
-        if (!empty($autoload['psr-0'])) {
-            foreach ($autoload['psr-0'] as $name => $path) {
-                $name = str_replace('\\', '/', trim($name, '\\'));
-                if (!$fs->isAbsolutePath($path)) {
-                    $path = $this->vendorDir . '/' . $package->getPrettyName() . '/' . $path;
-                }
-                $path = $fs->normalizePath($path);
-                if (strpos($path . '/', $vendorDir . '/') === 0) {
-                    $aliases["@$name"] = '<vendor-dir>' . substr($path, strlen($vendorDir)) . '/' . $name;
-                } else {
-                    $aliases["@$name"] = $path . '/' . $name;
-                }
-            }
-        }
-
-        if (!empty($autoload['psr-4'])) {
-            foreach ($autoload['psr-4'] as $name => $path) {
-                if (is_array($path)) {
-                    // ignore psr-4 autoload specifications with multiple search paths
-                    // we can not convert them into aliases as they are ambiguous
-                    continue;
-                }
-                $name = str_replace('\\', '/', trim($name, '\\'));
-                if (!$fs->isAbsolutePath($path)) {
-                    $path = $this->vendorDir . '/' . $package->getPrettyName() . '/' . $path;
-                }
-                $path = $fs->normalizePath($path);
-                if (strpos($path . '/', $vendorDir . '/') === 0) {
-                    $aliases["@$name"] = '<vendor-dir>' . substr($path, strlen($vendorDir));
-                } else {
-                    $aliases["@$name"] = $path;
-                }
-            }
-        }
-
-        return $aliases;
     }
 
     protected function removePackage(PackageInterface $package)
@@ -144,20 +94,6 @@ class Installer extends LibraryInstaller
             opcache_invalidate($file, true);
         }
         $extensions = require($file);
-
-        $vendorDir = str_replace('\\', '/', $this->vendorDir);
-        $n = strlen($vendorDir);
-
-        foreach ($extensions as &$extension) {
-            if (isset($extension['alias'])) {
-                foreach ($extension['alias'] as $alias => $path) {
-                    $path = str_replace('\\', '/', $path);
-                    if (strpos($path . '/', $vendorDir . '/') === 0) {
-                        $extension['alias'][$alias] = '<vendor-dir>' . substr($path, $n);
-                    }
-                }
-            }
-        }
 
         return $extensions;
     }
