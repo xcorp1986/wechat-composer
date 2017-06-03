@@ -1,0 +1,29 @@
+{
+    "name": "xutl/weichat-composer",
+    "description": "The composer plugin for Wechat extension installer",
+    "keywords": ["weixin", "composer", "extension installer"],
+    "type": "composer-plugin",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/xutl/wechat-composer/issues",
+        "source": "https://github.com/xutl/wechat-composer"
+    },
+    "authors": [
+        {
+            "name": "XU CHAO",
+            "email": "xuchao.dev@gmail.com"
+        }
+    ],
+    "require": {
+        "composer-plugin-api": "^1.0"
+    },
+    "require-dev": {
+        "composer/composer": "^1.0"
+    },
+    "autoload": {
+        "psr-4": { "xutl\\composer\\": "" }
+    },
+    "extra": {
+        "class": "xutl\\composer\\Plugin"
+    }
+}
